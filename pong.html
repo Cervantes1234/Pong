@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+
+    <style>
+        *{
+            padding: 0; margin: 0;
+        }
+        canvas{
+            background: #0101a355; display: block; margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="480" height="320"></canvas>
+
+    <script>
+        let canvas = document.getElementById("myCanvas");
+        let ctx = canvas.getContext("2d");
+        let x = 30;
+        let y = 30;
+        let dy = 1;
+        let dx = 1;
+        let raquetX = 460;
+        let raquetY = 130;
+        let raquetX2 = 5;
+        let raquetY2 = 130;
+        let downPressed = false;
+        let upPressed = false;
+        let downPressed2 = false;
+        let upPressed2 = false;
+
+        //Callback: pasar una función como parámetro a otra
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+
+        function keyDownHandler(e){
+            //alert(e.keyCode);
+            //Raqueta derecha
+            if(e.keyCode == 40){//Flecha abajo
+                downPressed = true;
+            }
+            else if(e.keyCode == 38){//Flecha arriba
+                upPressed = true;
+            }
+
+            //Raqueta izquierda
+            if(e.keyCode == 88){//Letra x
+                downPressed2 = true;
+            }
+            else if(e.keyCode == 90){//Letra z
+                upPressed2 = true;
+            }
+        }
+
+        function keyUpHandler(e){
+            //alert(e.keyCode);
+            //Raqueta derecha
+            if(e.keyCode == 40){//Flecha abajo
+                downPressed = false;
+            }
+            else if(e.keyCode == 38){//Flecha arriba
+                upPressed = false;
+            }
+
+            //Raqueta izquierda
+            if(e.keyCode == 88){//Letra x
+                downPressed2 = false;
+            }
+            else if(e.keyCode == 90){//Letra z
+                upPressed2 = false;
+            }
+        }
+
+        //Dibujar la pelota
+        function drawBall(){
+            ctx.beginPath();
+            ctx.arc(x,y,15,0,Math.PI*2);//Funcion para dibujar arcos
+            ctx.fillStyle = "#0099";
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        //Dibujar la raqueta
+        function drawRaquet(){
+            ctx.beginPath();
+            ctx.rect(raquetX2, raquetY2, 15, 55);//izquierda
+            ctx.rect(raquetX, raquetY, 15, 55);//derecha
+            ctx.fillStyle = "#0099";
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        //Colisiones-Distancia entre 2 puntos
+        function colissions(){
+            let distanceX = (raquetX) - x;
+            
+            if(distanceX < 0)
+            distanceX = -distanceX;
+            let distanceY = raquetY - y;
+
+            if(distanceY < 0)
+            distanceY = -distanceY;
+
+            if(distanceX < 25 && distanceY < 25){
+                dx = -dx;
+            }
+        }
+
+        function colissions2(){
+            //Raqueta 2
+            let distanceX2 = (raquetX2) - x;
+            
+            if(distanceX2 < 0)
+            distanceX2 = -distanceX2;
+            let distanceY2 = raquetY2 - y;
+
+            if(distanceY2 < 0)
+            distanceY2 = -distanceY2;
+
+            if(distanceX2 < 25 && distanceY2 < 25){
+                dx = -dx;
+            }
+        }
+
+        //Dibujar texto
+        function drawTexto(){
+            //ctx.translate(10, 50);
+            ctx.fillStyle = "Black";
+            //ctx.strokeStyle = "Black";
+            //ctx.font= "40 pt Verdana";
+            ctx.fillText("Jugador 1: 40", 20, 10);
+            ctx.fillText("Jugador 2: 40", 390, 10);
+        }
+
+        function draw(){
+            ctx.clearRect(0,0,480,320);
+            drawBall();
+            drawRaquet();
+            colissions();
+            colissions2();
+            drawTexto();
+
+            if(y >= 304){
+                dy = dy * (-1);
+            }
+
+            if(y < 0){
+                dy = dy*(-1);
+            }
+            
+            x = x + dx;
+            y = y + dy;
+
+            //Teclas up y down
+            if(downPressed == true)
+                raquetY += 2;
+
+            if(upPressed == true)
+                raquetY -=2;
+
+            //Teclas up y down 2
+            if(downPressed2 == true)
+                raquetY2 += 2;
+
+            if(upPressed2 == true)
+                raquetY2 -=2;
+        }
+        
+        setInterval(draw, 10);
+    </script>
+</body>
+</html>
